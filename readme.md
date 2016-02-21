@@ -29,7 +29,7 @@ Some simple examples listed:
     df.format(now, "hammerTime");
     // 17:46! Can't touch this!
 
-    // Reverse action, you can pass string in some format into date object
+    // Reverse action: you can pass as parameter a string in some format, and transform it in a valid date object
     df.toDate("October 7 2008 09:36:12", "mmmm dd yyyy H:M:s");
     // Tue Oct 07 2008 09:36:12 GMT+0200 (Hora de verano romance)
 ```
