@@ -25,11 +25,11 @@ Some simple examples listed:
     // 2007-06-09T17:46:21
 
     // ...Or add your own
-    df.format.masks.hammerTime = 'HH:MM! "Can\'t touch this!"';
+    df.masks.hammerTime = 'HH:MM! "Can\'t touch this!"';
     df.format(now, "hammerTime");
     // 17:46! Can't touch this!
 
-    // Reverse action: you can pass as parameter a string in some format, and transform it in a valid date object
+    // Reverse action: you can pass a string parameter in some format, and transform it in a valid date object
     df.toDate("October 7 2008 09:36:12", "mmmm dd yyyy H:M:s");
     // Tue Oct 07 2008 09:36:12 GMT+0200 (Hora de verano romance)
 ```
