@@ -35,4 +35,4 @@ Some simple examples listed:
 ```
 ## License
 
-(c) 2015-2016 Pablo rosique, MIT license.
+(c) 2015-2016 Pablo Rosique, MIT license.
