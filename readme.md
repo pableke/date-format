@@ -6,7 +6,7 @@ A node.js date format conversor package for Pablo Rosique.
 
 ```bash
 $ npm install date-format
-$ date-format --help
+//$ date-format --help
 ```
 
 ## Usage
