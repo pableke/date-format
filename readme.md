@@ -2,13 +2,6 @@
 
 A node.js date format conversor package for Pablo Rosique.
 
-## Installation
-
-```bash
-$ npm install date-format
-//$ date-format --help
-```
-
 ## Usage
 
 Some simple examples listed:
