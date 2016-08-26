@@ -1,5 +1,5 @@
 
-var df = require('../lib/date-format');
+var df = require('../date-format');
 
 function randomDate(start, end) {
 	start = start || new Date(2000, 0, 1);

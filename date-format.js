@@ -7,7 +7,7 @@ var timezoneClip = /[^-+\dA-Z]/g;
 
 exports.masks = {
 	'default':               'ddd mmm dd yyyy HH:MM:ss',
-	'shortDate':             'm/d/yy',
+	'shortDate':             'yy/m/d',
 	'mediumDate':            'mmm d, yyyy',
 	'longDate':              'mmmm d, yyyy',
 	'fullDate':              'dddd, mmmm d, yyyy',
@@ -72,11 +72,8 @@ exports.toDate = function(date, mask) {
 };
 
 function lpad(val, len) {
-	val = String(val);
-	len = len || 2;
-	while (val.length < len) {
-		val = '0' + val;
-	}
+	for (len = len || 2; val.length < len; )
+		val = "0" + val;
 	return val;
 };
 
@@ -95,9 +92,8 @@ exports.format = function(date, mask, utc, gmt) {
 		date = new Date();
 	}
 
-	if (!_self.isValid(date)) {
+	if (!_self.isValid(date))
 		return date; //invalid date
-	}
 
 	mask = _self.masks[mask] || mask || _self.masks['default'];
 
