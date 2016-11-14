@@ -72,6 +72,7 @@ exports.toDate = function(date, mask) {
 };
 
 function lpad(val, len) {
+	val = new String(val);
 	for (len = len || 2; val.length < len; )
 		val = "0" + val;
 	return val;
