@@ -22,7 +22,7 @@ console.log("---------------");
 
 var _dates = {
 	"dd/mm/yyyy": "23/05/1826",
-	"d/mmm/yyyy H:M": "1/Aug/1826 15:10",
+	"d/mmm/yyyy H:M": "1/Aug/2000 15:10",
 	"dd-mm-yyyy HH:M:s": "3-8-1999 4:17:2",
 	"mmmm dd yyyy H:M:s": "October 7 2008 09:36:12"
 };
