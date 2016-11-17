@@ -38,13 +38,20 @@ function DateFormat(i18n) {
 		dest = masks[dest] || dest || masks.default;
 
 		var parts = date.match(/\d{1,4}|[a-z]+/gi); //get date parts
-		var flags = mask.match(tokens).reduce(function(r, t, i) { r[t] = parts[i]; return r; }, {});
-		flags.d = +flags.d || parseInt(flags.dd) || _digit(i18n.dayNamesShort, flags.ddd) 
+		var flags = mask.match(tokens).reduce(function(r, t, i) {
+			r[t] = parts[i];
+			return r;
+		}, {});
+
+		//inicialize flags data object
+		var i = date.lastIndexOf("-");
+		var o = ((i > 10) && (i > (date.length - 8))) ? "-" : "+";
+		flags.d = +flags.d || parseInt(flags.dd) || _digit(i18n.dayNamesShort, flags.ddd)
 												|| _digit(i18n.dayNames, flags.dddd) || 1;
 		flags.dd = flags.dd || _lpad(flags.d);
 		flags.ddd = flags.ddd || i18n.dayNamesShort[flags.d - 1];
 		flags.dddd = flags.dddd || i18n.dayNames[flags.d - 1];
-		flags.m = +flags.m || parseInt(flags.mm) || _digit(i18n.monthNamesShort, flags.mmm) 
+		flags.m = +flags.m || parseInt(flags.mm) || _digit(i18n.monthNamesShort, flags.mmm)
 												|| _digit(i18n.monthNames, flags.mmmm) || 1;
 		flags.mm = flags.mm || _lpad(flags.m);
 		flags.mmm = flags.mmm || i18n.monthNamesShort[flags.m - 1];
@@ -64,11 +71,14 @@ function DateFormat(i18n) {
 		flags.T = flags.T || flags.t.toUpperCase();
 		flags.TT = flags.TT || flags.T + "M";
 		flags.Z = flags.Z || "";
-		//flags.o = flags.o || "0000";
+		flags.o = flags.o || "0000";
+		flags.o = o + flags.o;
+		//traslate date format from source mask to date output mask
 		return dest.replace(tokens, function(match) { return flags[match]; });
 	};
 
 	this.toDate = function(date, mask) {
+		mask = masks[mask] || mask || masks.default;
 		return new Date(self.trDate(date, mask, "isoDateTime"));
 	};
 
