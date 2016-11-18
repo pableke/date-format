@@ -20,6 +20,7 @@ function DateFormat(i18n) {
 		dateTime:            "yyyy-mm-dd HH:MM:ss",
 		expiresHeaderFormat: "ddd, dd mmm yyyy HH:MM:ss Z"
 	};
+	this.masks = masks;
 
 	i18n = i18n || {};
 	i18n.dayNamesShort = i18n.dayNamesShort || ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

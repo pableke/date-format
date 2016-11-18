@@ -10,35 +10,26 @@
 <body>
 
 <h2>Date-Format Client Test</h2>
-<div>
-	<div id="df" value="23/05/1826" mask="dd/mm/yyyy", dest="isoDate">
-		date-format(23/05/1826, dd/mm/yyyy, isoDate);
-	</div>
-	<span id="result"></span><hr>
-
-	<div id="df" value="1/Aug/2000 15:10" mask="d/mmm/yyyy H:M" dest="latinDateTime">
-		date-format(1/Aug/2000 15:10, d/mmm/yyyy H:M, latinDateTime);
-	</div>
-	<span id="result"></span><hr>
-
-	<div id="df" value="3-8-1999 4:17:2" mask="dd-mm-yyyy HH:M:s" dest="fullDate">
-		date-format(3-8-1999 4:17:2, dd-mm-yyyy HH:M:s, fullDate);
-	</div>
-	<span id="result"></span><hr>
-
-	<div id="df" value="October 7 2008 09:36:12" mask="mmmm dd yyyy H:M:s" dest="dateTime">
-		date-format(October 7 2008 09:36:12, mmmm dd yyyy H:M:s, dateTime);
-	</div>
-	<span id="result"></span><hr>
+<div id="df">
 </div>
 
 <script type="text/javascript">
+	var start = (new Date("2015-01-01")).getTime();
+	var end = (new Date("2015-31-12")).getTime();
 	var df = new DateFormat();
-	$("div#df").each(function(i, e) {
-		var fmt = df.trDate($(e).attr("value"), $(e).attr("mask"), $(e).attr("dest"));
-		var date = df.toDate(fmt, $(e).attr("dest"));
-		$(e).next().html("Result = " + fmt + "<br>Server Date: " + date 
-						+ "<br>isDate = " + df.isDate(date));
+	function random(min, max) { return (Math.random() * max) + min; };
+	//var dates = Array(100).fill(1).map(n => new Date(random(start, end)));
+	var dates = ["October 7 2008 09:36:12", "23/05/1826", "1/Aug/2000 15:10", "3-8-1999 4:17:2", "14 2 01 12:36:22"];
+	var masks = ["isoDate", "fullDate", "latinDateTime", "dateTime", "longTime"];
+	Object.keys(df.masks).forEach(function(mask, i) {
+		var date = dates[i % (dates.length - 1)];
+		var dest = masks[i % (dates.length - 1)];
+		var title = "date-format(" + date + ", " + mask + ", " + dest + ");";
+		alert(title);
+		var fmt = df.trDate(date, mask, dest);
+		var oDate = df.toDate(fmt, dest);
+		$("div#df").append("<div>" + title + "<br>Result = " + fmt + "<br>Server Date: " + oDate 
+							+ "<br>isDate = " + df.isDate(oDate) + "</div><hr>");
 	});
 </script>
 
