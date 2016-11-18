@@ -1,35 +1,19 @@
 
 var df = require('../date-format');
 
-function randomDate(start, end) {
-	start = start || new Date(2000, 0, 1);
-	end = end || new Date();
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
+var start = (new Date("2015-01-01")).getTime();
+var end = (new Date("2015-12-31")).getTime();
+function random(min, max) { return (Math.random() * max) + min; };
+function randDate(min, max) { return min + Math.random() * (max - min); };
+var dates = Array(100).fill(1).map(n => new Date(randDate(start, end)));
 
-var dest = ["isoDate", "dateFull", "latinDateTime", "dateTime", "shortTime"];
-var dates = {
-	"dd/mm/yyyy": "23/05/1826",
-	"d/mmm/yyyy H:M": "1/Aug/2000 15:10",
-	"dd-mm-yyyy HH:M:s": "3-8-1999 4:17:2",
-	"mmmm dd yyyy H:M:s": "October 7 2008 09:36:12"
-};
-
-console.log("--------------");
-console.log("trDate -- test");
-console.log("--------------");
-
-Object.keys(dates).forEach(function(mask, i) {
-	console.log(mask + " = " + dates[mask]);
-	console.log(dest[i] + " = " + df.trDate(dates[mask], mask, dest[i]));
-});
-
-console.log("\n\n");
-console.log("---------------");
-console.log("toDate --- test");
-console.log("---------------");
-
-Object.keys(dates).forEach(function(mask) {
-	console.log(mask + " - " + dates[mask]);
-	console.log(df.toDate(dates[mask], mask));
+Object.keys(df.masks).forEach(function(mask, i, masks) {
+	var date = dates[i];
+	var dest = masks[Math.floor(random(0, masks.length))];
+	var fmtDate = df.format(date, mask);
+	console.log("date-format(" + fmtDate + ", " + mask + ", " + dest + ");")
+	console.log("format -- test = " + fmtDate);
+	var fmt = df.trDate(fmtDate, mask, dest);
+	console.log("trDate -- test = " + fmt);
+	console.log("toDate --- test = " + df.toDate(fmt, dest));
 });
