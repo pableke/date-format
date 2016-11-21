@@ -1,10 +1,10 @@
 # date-format
 
-A node.js date format conversor package for Pablo Rosique.
+Node JS and JavaScript client side date format conversor.
 
 ## Usage
 
-Some simple examples listed:
+Some simple Node JS examples listed:
 ```js
 	var df = require("date-format");
 	var now = new Date();
