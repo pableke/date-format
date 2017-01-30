@@ -1,14 +1,22 @@
 
 function DateFormat(i18n) {
-	var self = this; //auto-reference
 	const reMaskTokens = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZWN]|'[^']*'/g;
-	const reDateTokens = /\d{1,4}|[a-z]+/gi; //split date string parts
+	const reDateTokens = /[\+\-]\d{4}|\d{1,4}|[a-z]+/gi; //default split date string parts
+	const reTokens = { //advanced split date string parts
+						"yyyy": "\\d{4}", "yy": "\\d{2}", "o": "[\\+\\-]\\d{4}",
+						"mm": "\\d{2}", "m": "\\d{1,2}", "dd": "\\d{2}", "d": "\\d{1,2}", 
+						"hh": "\\d{2}", "h": "\\d{1,2}", "HH": "\\d{2}", "H": "\\d{1,2}",
+						"MM": "\\d{2}", "M": "\\d{1,2}", "ss": "\\d{2}", "s": "\\d{1,2}"
+					};
+
 	const masks = { //masks container
 		default:             "ddd mmm dd yyyy HH:MM:ss",
+		minDate:             "yymmdd",
 		shortDate:           "yy/m/d",
 		mediumDate:          "mmm d, yyyy",
 		longDate:            "mmmm d, yyyy",
 		fullDate:            "dddd, mmmm d, yyyy",
+		minTime:             "HHMMss",
 		shortTime:           "h:MM TT",
 		mediumTime:          "h:MM:ss TT",
 		longTime:            "h:MM:ss TT Z",
@@ -39,14 +47,22 @@ function DateFormat(i18n) {
 	var O = ((tzo < 0) ? "-" : "+") + "0000".substring(o.length) + o;
 
 	this.trDate = function(date, mask, dest) {
+		if (!date || (typeof date !== "string"))
+			return date; //not a valid input date format
 		mask = masks[mask] || mask || masks.default;
 		dest = masks[dest] || dest || masks.default;
 
-		var parts = date.match(reDateTokens); //get date parts
-		var flags = mask.match(reMaskTokens).reduce(function(r, t, i) {
-			r[t] = parts[i];
-			return r;
-		}, {});
+		var reMask = ""; //build specific regex
+		mask.match(reMaskTokens).forEach(function(t) {
+			reMask += "(" + (reTokens[t] || "[a-z]*") + ")\\W*";
+		});
+		var parts = date.match(new RegExp(reMask, "i")).slice(1);
+		//var parts = date.match(reDateTokens); //get date parts
+
+		var flags = {}; //flags container
+		mask.match(reMaskTokens).forEach(function(t, i) {
+			flags[t] = parts[i];
+		});
 
 		//inicialize flags data object
 		flags.yy = flags.yy || (flags.yyyy ? flags.yyyy.substr(2, 2) : Y.substr(2, 2));
@@ -76,13 +92,12 @@ function DateFormat(i18n) {
 		flags.T = flags.T || flags.t.toUpperCase();
 		flags.TT = flags.TT || flags.T + "M";
 		flags.Z = flags.Z || "";
-		flags.o = flags.o ? (((date.lastIndexOf("+") > 6) ? "+" : "-") + flags.o) : O;
+		flags.o = flags.o || O;
 		return dest.replace(reMaskTokens, function(match) { return flags[match]; });
 	};
 
 	this.toDate = function(date, mask) {
-		mask = masks[mask] || mask || masks.default;
-		return new Date(self.trDate(date, mask, "isoDateTime"));
+		return new Date(this.trDate(date, mask, "isoDateTime"));
 	};
 
 	this.isDate = function(date) {
@@ -90,7 +105,6 @@ function DateFormat(i18n) {
 	};
 
 	this.format = function(date, mask) {
-		mask = masks[mask] || mask || masks.default;
-		return self.trDate(date.toString(), "default", mask);
+		return this.trDate(date.toString(), "default", mask);
 	};
 };
