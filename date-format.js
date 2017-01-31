@@ -2,7 +2,7 @@
 
 var self = this; //auto-reference
 const reMaskTokens = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZWN]|'[^']*'/g;
-const reDateTokens = /\d{1,4}|[a-z]+/gi; //split date string parts
+const reDateTokens = /[\+\-]\d{4}|\d{1,4}|[a-z]+/gi; //default split date string parts
 
 var i18n = exports.i18n = {}; //Internationalization object
 i18n.dayNamesShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -46,14 +46,16 @@ var O = ((tzo < 0) ? "-" : "+") + "0000".substring(o.length) + o;
  * @param string dest: universal datetime indicator
  */
 exports.trDate = function(date, mask, dest) {
+	if (!date || (typeof date !== "string"))
+		return date; //not a valid input date format
 	mask = masks[mask] || mask || masks.default;
 	dest = masks[dest] || dest || masks.default;
 
+	var flags = {}; //flags container
 	var parts = date.match(reDateTokens); //get date parts
-	var flags = mask.match(reMaskTokens).reduce(function(r, t, i) {
-		r[t] = parts[i];
-		return r;
-	}, {});
+	mask.match(reMaskTokens).forEach(function(t, i) {
+		flags[t] = parts[i];
+	});
 
 	//inicialize flags data object
 	flags.yy = flags.yy || (flags.yyyy ? flags.yyyy.substr(2, 2) : Y.substr(2, 2));
@@ -83,7 +85,7 @@ exports.trDate = function(date, mask, dest) {
 	flags.T = flags.T || flags.t.toUpperCase();
 	flags.TT = flags.TT || flags.T + "M";
 	flags.Z = flags.Z || "";
-	flags.o = flags.o ? (((date.lastIndexOf("+") > 6) ? "+" : "-") + flags.o) : O;
+	flags.o = flags.o || O;
 	return dest.replace(reMaskTokens, function(match) { return flags[match]; });
 };
 
@@ -94,7 +96,6 @@ exports.trDate = function(date, mask, dest) {
  * @param string mask: define the date string format
  */
 exports.toDate = function(date, mask) {
-	mask = masks[mask] || mask || masks.default;
 	return new Date(self.trDate(date, mask, "isoDateTime"));
 };
 
@@ -108,6 +109,5 @@ exports.isDate = function(date) {
 };
 
 exports.format = function(date, mask) {
-	mask = masks[mask] || mask || masks.default;
 	return self.trDate(date.toString(), "default", mask);
 };
