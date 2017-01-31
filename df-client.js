@@ -2,21 +2,12 @@
 function DateFormat(i18n) {
 	const reMaskTokens = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZWN]|'[^']*'/g;
 	const reDateTokens = /[\+\-]\d{4}|\d{1,4}|[a-z]+/gi; //default split date string parts
-	const reTokens = { //advanced split date string parts
-						"yyyy": "\\d{4}", "yy": "\\d{2}", "o": "[\\+\\-]\\d{4}",
-						"mm": "\\d{2}", "m": "\\d{1,2}", "dd": "\\d{2}", "d": "\\d{1,2}", 
-						"hh": "\\d{2}", "h": "\\d{1,2}", "HH": "\\d{2}", "H": "\\d{1,2}",
-						"MM": "\\d{2}", "M": "\\d{1,2}", "ss": "\\d{2}", "s": "\\d{1,2}"
-					};
-
 	const masks = { //masks container
 		default:             "ddd mmm dd yyyy HH:MM:ss",
-		minDate:             "yymmdd",
 		shortDate:           "yy/m/d",
 		mediumDate:          "mmm d, yyyy",
 		longDate:            "mmmm d, yyyy",
 		fullDate:            "dddd, mmmm d, yyyy",
-		minTime:             "HHMMss",
 		shortTime:           "h:MM TT",
 		mediumTime:          "h:MM:ss TT",
 		longTime:            "h:MM:ss TT Z",
@@ -52,14 +43,8 @@ function DateFormat(i18n) {
 		mask = masks[mask] || mask || masks.default;
 		dest = masks[dest] || dest || masks.default;
 
-		var reMask = ""; //build specific regex
-		mask.match(reMaskTokens).forEach(function(t) {
-			reMask += "(" + (reTokens[t] || "[a-z]*") + ")\\W*";
-		});
-		var parts = date.match(new RegExp(reMask, "i")).slice(1);
-		//var parts = date.match(reDateTokens); //get date parts
-
 		var flags = {}; //flags container
+		var parts = date.match(reDateTokens); //get date parts
 		mask.match(reMaskTokens).forEach(function(t, i) {
 			flags[t] = parts[i];
 		});
